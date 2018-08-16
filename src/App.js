@@ -1,18 +1,47 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import Navbar from './components/Navbar'
+import Counters from './components/Counters'
 import './App.css';
 
 class App extends Component {
+  state = { 
+    counters : [
+        {id: 1, value:5},
+        {id: 2, value:10},
+        {id: 3, value:0},
+        {id: 4, value:0},
+    ]
+ }
+ handleDeleteCounter = (counterId) =>{
+     const counters = this.state.counters.filter(counter => counter.id!==counterId)
+     this.setState(
+         {counters}
+    )
+ }
+ handleIncrement = (counter) =>{
+     const counters = [...this.state.counters];
+     const index = counters.indexOf(counter)
+     counters[index] = {...counter}
+     counters[index].value++;
+     this.setState({counters})
+ }
+ handleReset = () =>{
+     const counters = this.state.counters.map(counter => {
+         counter.value = 0;
+         return counter;
+     })
+     this.setState({counters})
+ }
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div>
+        <Navbar totalCount = {this.state.counters.filter(el=> el.value>0).length} />
+      <Counters 
+      counters ={this.state.counters}
+      onReset={this.handleReset}
+      onIncrement ={this.handleIncrement}
+      onDelete ={this.handleDeleteCounter}
+      />
       </div>
     );
   }
